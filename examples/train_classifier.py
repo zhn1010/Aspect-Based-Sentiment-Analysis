@@ -5,12 +5,17 @@ import shutil
 from dataclasses import dataclass
 from functools import partial
 from typing import Callable
-
+import sys
 import optuna
 import numpy as np
 import tensorflow as tf
 import transformers
 from sklearn.model_selection import train_test_split
+
+print('sys.path', sys.path)
+ROOT_DIR = os.path.normpath(os.path.abspath(__file__) + os.sep + os.pardir + os.sep + os.pardir)
+print('ROOT_DIR', ROOT_DIR)
+sys.path.insert(0, ROOT_DIR)
 
 import aspect_based_sentiment_analysis as absa
 from aspect_based_sentiment_analysis.training import (
@@ -105,10 +110,12 @@ def experiment(
     # understandable batches. You are not obligated to use datasets, you can
     # create your own iterable, which transforms classifier example to the
     # classifier train batches.
+    print('Before Dataset Creation')
     dataset = absa.training.ClassifierDataset(
         train_examples, batch_size, tokenizer, num_polarities=3)
     test_dataset = absa.training.ClassifierDataset(
         test_examples, batch_size, tokenizer, num_polarities=3)
+    print('After Dataset Creation')
 
     # To easily adjust optimization process to our needs, we define custom
     # training loops called routines (in contrast to use built-in methods as
@@ -125,9 +132,10 @@ def experiment(
     early_stopping = EarlyStopping(acc_history, patience=3, min_delta=0.01, direction='maximize')
     checkpoints = ModelCheckpoint(model, acc_history, checkpoints_dir, direction='maximize')
     callbacks = [logger, loss_history, acc_history, checkpoints, early_stopping]
+    print('Before training the Classifier')
     absa.training.train_classifier(
         model, optimizer, dataset, epochs, test_dataset, callbacks, strategy)
-
+    print('After training the Classifier')
     # In the end, we would like to save the model. Our implementation
     # gentle extend the *transformers* lib capabilities, in consequences,
     # `BertABSClassifier` inherits from the `TFBertPreTrainedModel`, and

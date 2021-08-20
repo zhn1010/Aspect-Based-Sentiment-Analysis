@@ -234,7 +234,7 @@ class Pipeline(_Pipeline):
             add_special_tokens=True,
             padding=True,
             return_tensors='tf',
-            return_attention_masks=True,
+            # return_attention_masks=True,
             max_length=512
         )
         batch = InputBatch(

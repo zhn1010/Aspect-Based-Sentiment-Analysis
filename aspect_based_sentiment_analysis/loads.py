@@ -56,6 +56,7 @@ def load_examples(
     try:
         local_path = utils.file_from_bucket(name)
         examples = utils.load(local_path)
+        print('examples', examples[0])
         return examples
 
     except NotFound as error:

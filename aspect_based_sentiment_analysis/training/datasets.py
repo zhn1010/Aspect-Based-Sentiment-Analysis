@@ -81,7 +81,7 @@ class ClassifierDataset(InMemoryDataset):
             pairs,
             add_special_tokens=True,
             padding=True,
-            return_attention_masks=True,
+            # return_attention_masks=True,
             return_tensors='tf'
         )
         input_ids = encoded['input_ids']
