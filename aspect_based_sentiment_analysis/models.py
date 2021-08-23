@@ -112,7 +112,7 @@ def force_to_return_details(kwargs: dict):
 
 class BertABSCConfig(transformers.BertConfig):
 
-    def __init__(self, num_polarities: int = 3, **kwargs):
+    def __init__(self, num_polarities: int = 4, **kwargs):
         force_to_return_details(kwargs)
         super().__init__(**kwargs)
         self.num_polarities = num_polarities

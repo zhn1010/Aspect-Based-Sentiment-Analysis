@@ -70,7 +70,7 @@ class ClassifierDataset(InMemoryDataset):
     examples: List[LabeledExample]
     batch_size: int
     tokenizer: transformers.PreTrainedTokenizer
-    num_polarities: int = 3
+    num_polarities: int = 4
 
     def preprocess_batch(
             self, batch_examples: List[LabeledExample]
