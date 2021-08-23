@@ -6,11 +6,13 @@ from dataclasses import dataclass
 from functools import partial
 from typing import Callable
 import sys
+import json
 import optuna
 import numpy as np
 import tensorflow as tf
 import transformers
 from sklearn.model_selection import train_test_split
+
 
 print('sys.path', sys.path)
 ROOT_DIR = os.path.normpath(os.path.abspath(__file__) + os.sep + os.pardir + os.sep + os.pardir)
@@ -82,9 +84,21 @@ def experiment(
     # Load examples from the known labeled datasets like the SemEval. The
     # *test* set is to monitor the training (precisely it's the dev set) and
     # equals 10%.
-    examples = absa.load_examples(domain=domain)
-    train_examples, test_examples = train_test_split(
-        examples, test_size=0.1, random_state=1)
+
+
+    # examples = absa.load_examples(domain=domain)
+    # with open(os.path.join(ROOT_DIR, 'examples.pickle'), 'rb') as handle:
+    #     examples = pickle.load(handle)
+
+    with open(os.path.join(ROOT_DIR, 'examples.json')) as f:
+        examples_json = json.load(f)
+
+    examples = []
+    for example_json in examples_json:
+        labeledExample = absa.LabeledExample(text=example_json["text"], aspect=example_json["aspect"], sentiment=absa.Sentiment(example_json["sentiment"]))
+        examples.append(labeledExample)
+
+    train_examples, test_examples = train_test_split(examples, test_size=0.1, random_state=1)
 
     # To build our model, we can define a config, which contains all required
     # information needed to build the `BertABSClassifier` model (including

@@ -11,9 +11,13 @@ import tensorflow as tf
 class Sentiment(IntEnum):
     """ We use the three basic polarities to
     classify the aspect based sentiment."""
-    neutral = 0
-    negative = 1
-    positive = 2
+    # neutral = 0
+    # negative = 1
+    # positive = 2
+    Method = 0
+    Method_Used = 1
+    Method_Proposed = 2
+    Method_Compare = 3
 
 
 @dataclass(frozen=True)
