@@ -131,7 +131,7 @@ class BertABSClassifier(ABSClassifier, transformers.TFBertPreTrainedModel):
         self.dropout = layers.Dropout(config.hidden_dropout_prob)
         print('config.num_polarities', config.num_polarities)
         self.classifier = layers.Dense(
-            4,
+            config.num_polarities,
             kernel_initializer=initializer,
             name='classifier'
         )

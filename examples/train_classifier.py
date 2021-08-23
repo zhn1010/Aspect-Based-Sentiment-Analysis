@@ -13,6 +13,8 @@ import tensorflow as tf
 import transformers
 from sklearn.model_selection import train_test_split
 
+from tensorflow.keras import layers
+
 
 print('sys.path', sys.path)
 ROOT_DIR = os.path.normpath(os.path.abspath(__file__) + os.sep + os.pardir + os.sep + os.pardir)
@@ -110,8 +112,16 @@ def experiment(
     # case it's only single GPU but the multi GPU training via MirroredStrategy
     # can be used as well.
     strategy = tf.distribute.OneDeviceStrategy('GPU')
+    initializer = transformers.modeling_tf_utils.get_initializer(
+            0.02
+        )
     with strategy.scope():
         model = absa.BertABSClassifier.from_pretrained(base_model_name)
+        model.classifier = layers.Dense(
+            4,
+            kernel_initializer=initializer,
+            name='classifier'
+        )
         tokenizer = transformers.BertTokenizer.from_pretrained(base_model_name)
         optimizer = tf.keras.optimizers.Adam(
             learning_rate=learning_rate,
@@ -186,7 +196,7 @@ def objective(trial, domain: str):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Classifier Optimization')
-    parser.add_argument('--domain', action='store', required=True,
+    parser.add_argument('--domain', action='store', required=False, default='laptop',
                         help='The dataset domain: `restaurant` or `laptop`')
     parser.add_argument('--n_trials', action='store', type=int, default=100,
                         help='The number of trials.')
