@@ -126,9 +126,9 @@ def experiment(
     # classifier train batches.
     print('Before Dataset Creation')
     dataset = absa.training.ClassifierDataset(
-        train_examples, batch_size, tokenizer, num_polarities=3)
+        train_examples, batch_size, tokenizer, num_polarities=4)
     test_dataset = absa.training.ClassifierDataset(
-        test_examples, batch_size, tokenizer, num_polarities=3)
+        test_examples, batch_size, tokenizer, num_polarities=4)
     print('After Dataset Creation')
 
     # To easily adjust optimization process to our needs, we define custom
